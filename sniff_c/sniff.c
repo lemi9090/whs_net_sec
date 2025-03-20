@@ -10,8 +10,8 @@
 // 2. 패킷 캡처 시작
 // 3. pcap 핸들 닫기
 
-typedef unsigned char u_char; // 1바이트 메모리를 사용할 때 양수만 사용하여 값을 저장   
-typedef unsigned short u_short; // 2바이트 메모리를 사용할 때 양수만 사용하여 값을 저장 
+// typedef unsigned char u_char; // 1바이트 메모리를 사용할 때 양수만 사용하여 값을 저장   
+// typedef unsigned short u_short; // 2바이트 메모리를 사용할 때 양수만 사용하여 값을 저장 
 
 struct ethernet_header
 {
