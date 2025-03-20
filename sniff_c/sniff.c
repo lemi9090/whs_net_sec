@@ -82,9 +82,9 @@ void packet_capture(u_char* args, const struct pcap_pkthdr* header, const u_char
         struct tcpheader *tcp = (struct tcpheader *)(packet + sizeof(struct ethernet_header) + ip -> iph_ihl *4);
 
         
-        printf("       From: %s\n", inet_ntoa(ip->iph_sourceip));   // 출발
-        printf("         To: %s\n", inet_ntoa(ip->iph_destip));    // 도착 
-
+        printf("       From: %s\n", inet_ntoa(ip->iph_sourceip));  
+        printf("         To: %s\n", inet_ntoa(ip->iph_destip));    
+	printf("   Protocol: TCP\n");
         printf("\n");
     }    
 }
