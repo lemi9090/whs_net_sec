@@ -6,18 +6,6 @@
 // 이더넷 헤더와 ip 헤더를 정의해 줘야 한다. 
 // 스니핑 과정에서 패킷이 캡쳐된 후 버퍼에 올라간다. 
 // 패킷을 캡쳐하는 과정은 pcap 라이브러리로 제어된다. 
-
-void packet_capture(u_char *args, const struct pcap_pkthdr * header , const u_char *packet){
-    
-}
-#include <stdlib.h>
-#include <stdio.h>
-#include <pcap.h>
-#include <arpa/inet.h> //주소변환 기능을 사용하는 헤더 
-
-// 이더넷 헤더와 ip 헤더를 정의해 줘야 한다. 
-// 스니핑 과정에서 패킷이 캡쳐된 후 버퍼에 올라간다. 
-// 패킷을 캡쳐하는 과정은 pcap 라이브러리로 제어된다. 
 // 1. 네트워크 디바이스 열기
 // 2. 패킷 캡처 시작
 // 3. pcap 핸들 닫기
@@ -82,9 +70,9 @@ void packet_capture(u_char* args, const struct pcap_pkthdr* header, const u_char
         struct tcpheader *tcp = (struct tcpheader *)(packet + sizeof(struct ethernet_header) + ip -> iph_ihl *4);
 
         
-        printf("       From: %s\n", inet_ntoa(ip->iph_sourceip));  
-        printf("         To: %s\n", inet_ntoa(ip->iph_destip));    
-	printf("   Protocol: TCP\n");
+        printf("       From: %s\n", inet_ntoa(ip->iph_sourceip));   // 출발
+        printf("         To: %s\n", inet_ntoa(ip->iph_destip));    // 도착 
+
         printf("\n");
     }    
 }
