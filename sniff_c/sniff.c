@@ -3,12 +3,6 @@
 #include <pcap.h>
 #include <arpa/inet.h> //주소변환 기능을 사용하는 헤더 
 
-// 이더넷 헤더와 ip 헤더를 정의해 줘야 한다. 
-// 스니핑 과정에서 패킷이 캡쳐된 후 버퍼에 올라간다. 
-// 패킷을 캡쳐하는 과정은 pcap 라이브러리로 제어된다. 
-// 1. 네트워크 디바이스 열기
-// 2. 패킷 캡처 시작
-// 3. pcap 핸들 닫기
 
 //typedef unsigned char u_char; // 1바이트 메모리를 사용할 때 양수만 사용하여 값을 저장   
 //typedef unsigned short u_short; // 2바이트 메모리를 사용할 때 양수만 사용하여 값을 저장 
@@ -62,7 +56,7 @@ struct tcpheader {
 #define TH_OFF(th)      (((th)->tcp_offx2 & 0xf0) >> 4)
 
 void packet_capture(u_char* args, const struct pcap_pkthdr* header, const u_char* packet) {
-	printf("Get packet!\n");
+	
     struct ethernet_header *eth = (struct ethernet_header *)packet;
     if (ntohs(eth->ether_type) == 0x0800) {
         //ntohs = 네트워크 바이트 순서를 호스트 바이트 순서로 변환해준다. 
@@ -70,7 +64,9 @@ void packet_capture(u_char* args, const struct pcap_pkthdr* header, const u_char
         // ip의 시작점을 구하는 과정 
         // = packet은 이더넷 헤더의 시작위치를 반환 + 이더넷 헤더의 크기를 하면 ip 헤더의 시작위치를 구할 수 있다. 
         struct tcpheader *tcp = (struct tcpheader *)(packet + sizeof(struct ethernet_header) + ip -> iph_ihl *4);
-        printf("Ethernet header !\n");
+        printf("\n#################### Got packet ! ####################\n");
+        
+        printf("\n1. Ethernet header !\n");
 
         printf("[Destination] : ");
         for (int i = 0; i < 6; i++) {
@@ -82,28 +78,28 @@ void packet_capture(u_char* args, const struct pcap_pkthdr* header, const u_char
         for (int i = 0; i < 6; i++) {
             printf("%02X ", eth->eth_Src_mac_addr[i]);
         }
-        printf("\n");
+        printf("\n\n");
         
-        printf("Ip header\n");
-        printf("       From: %s\n", inet_ntoa(ip->iph_sourceip));  
-        printf("         To: %s\n", inet_ntoa(ip->iph_destip));   
+        printf("2. Ip header\n");
+        printf("[From]: %s\n", inet_ntoa(ip->iph_sourceip));  
+        printf("[To]: %s\n", inet_ntoa(ip->iph_destip));   
 
         printf("\n");
 
-        printf("TCP Header\n");
-        printf("Src port : %d\n", ntohs(tcp->tcp_sport));  
-        printf("Dst port : %d\n", ntohs(tcp->tcp_dport));
+        printf("3. TCP Header\n");
+        printf("[Src port] : %d\n", ntohs(tcp->tcp_sport));  
+        printf("[Dst port] : %d\n", ntohs(tcp->tcp_dport));
 
         printf("\n");
 
-        printf("Message : \n");
+        printf("4. Message : \n");
         int ip_header_len = ip -> iph_ihl *4;
         int tcp_header_len =  TH_OFF(tcp) * 4;
         int header_size = sizeof(struct ethernet_header) + ip_header_len + tcp_header_len;
         int payload_size = header -> caplen - header_size;
         const u_char *payload = packet + header_size;
-
-        printf("Payload (Max 32 bytes):\n   ");
+      
+        printf("[Payload (Max 32 bytes)]:\n   ");
         for (int i = 0; i < (payload_size > 32 ? 32 : payload_size); i++) {
             printf("%02x ", payload[i]);
         }
